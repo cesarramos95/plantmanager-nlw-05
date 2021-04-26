@@ -8,13 +8,15 @@ import {
 } from 'react-native';
 
 import { Header } from '../components/Header';
+import { PlantCardSecondary } from '../components/PlantCardSecondary';
 
 import waterdrop from '../assets/waterdrop.png';
 import colors from '../styles/colors';
 import { loadPlant, PlantProps } from '../libs/storage';
 import { formatDistance } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { pt } from 'date-fns/locale';
 import fonts from '../styles/fonts';
+import { Load } from '../components/Load';
 
 export function MyPlants() {
   const [myPlants, setMyPlants] = useState<PlantProps[]>([]);
@@ -28,11 +30,11 @@ export function MyPlants() {
       const nextTime = formatDistance(
         new Date(plantsStoraged[0].dateTimeNotification).getTime(),
         new Date().getTime(),
-        { locale: ptBR }
+        { locale: pt }
       );
 
       setNextWatered(
-        `Não esqueça de regar a ${plantsStoraged[0].name} à ${nextTime} horas.`
+        `Não esqueça de regar a ${plantsStoraged[0].name} em ${nextTime}.`
       )
 
       setMyPlants(plantsStoraged);
@@ -41,6 +43,9 @@ export function MyPlants() {
 
     loadStorageData();
   }, []);
+
+  if (loading)
+    return <Load />
 
   return (
     <View style={styles.container}>
@@ -58,14 +63,14 @@ export function MyPlants() {
 
       <View style={styles.plants}>
         <Text style={styles.plantsTitle}>
-          qualquer texto
+          Próximas regadas
         </Text>
 
         <FlatList
           data={myPlants}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => (
-            <Text>Elemento</Text>
+            <PlantCardSecondary data={item} />
           )}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flex: 1 }}
@@ -100,8 +105,7 @@ const styles = StyleSheet.create({
   spotlightText: {
     flex: 1,
     color: colors.blue,
-    paddingHorizontal: 20,
-    textAlign: 'justify'
+    paddingHorizontal: 20
   },
   plants: {
     flex: 1,
