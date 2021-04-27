@@ -25,7 +25,7 @@ export default function App() {
       return () => subscription.remove();
 
     async function notifications() {
-      // await Notifications.cancelAllScheduledNotificationsAsync();
+      await Notifications.cancelAllScheduledNotificationsAsync();
 
       const data = await Notifications.getAllScheduledNotificationsAsync();
     }
